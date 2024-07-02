@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include "msq_queue.h"
 #include "voice_interface.h"
+#include "socket_interface.h"
 #include "control.h"
 #include <pthread.h>
 #include "global.h"
@@ -20,17 +21,19 @@ int main(int argc, char *argv[])
 
     if (ctrl_info->mqd == -1)
     {
-        printf("%s | %s | %d,ctrl_info->mqd=%d\n",__FILE__,__func__,__LINE__,ctrl_info->mqd);
-        exit(-1);
+        printf("%s | %s | %d,ctrl_info->mqd=%d\n", __FILE__, __func__, __LINE__, ctrl_info->mqd);
+        return -1;
     }
 
     ctrl_info->ctrl_phead = add_voice_to_ctrl_list(ctrl_info->ctrl_phead);
+    ctrl_info->ctrl_phead = add_tcpsocket_to_ctrl_list(ctrl_info->ctrl_phead);
 
     pointer = ctrl_info->ctrl_phead;
     while (pointer != NULL)
     {
         if (pointer->init != NULL)
         {
+            printf("%s | %s | %d pointer->control_name:%s\n", __FILE__, __func__, __LINE__, pointer->control_name);
             pointer->init();
         }
         pointer = pointer->next;
@@ -44,20 +47,21 @@ int main(int argc, char *argv[])
     {
         if (pointer->get != NULL)
         {
+            printf("%s | %s | %d pointer->control_name:%s\n", __FILE__, __func__, __LINE__, pointer->control_name);
             pthread_create(&tid[i], NULL, (void *)pointer->get, (void *)ctrl_info);
         }
+        pointer = pointer->next;
     }
+
     for (i = 0; i < node_num; i++)
     {
         pthread_join(tid[i], NULL);
     }
+    //pointer = ctrl_info->ctrl_phead;
     for (i = 0; i < node_num; i++)
     {
         if (pointer->final != NULL)
-        {
             pointer->final();
-        }
-
         pointer = pointer->next;
     }
     msg_queue_final(ctrl_info->mqd);

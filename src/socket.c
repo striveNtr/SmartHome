@@ -31,4 +31,5 @@ int socket_init(const char *ipaddr, const char *port)
         exit(-1);
     }
     return s_fd;
-}
+}             
+

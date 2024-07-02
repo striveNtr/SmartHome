@@ -42,9 +42,11 @@ static void *voice_get(void *arg)
             pthread_exit(0);
         }
     }
-
-    mqd = ctrl_info->mqd;
-
+    if(ctrl_info == NULL)
+    {
+        mqd = ctrl_info->mqd;
+    }
+    
     if ((mqd_t)-1 == mqd)
     {
         pthread_exit(0);
@@ -82,7 +84,6 @@ struct control voice_control = {
 
 struct control *add_voice_to_ctrl_list(struct control *phead)
 {
-    struct control *pcontrol = NULL;
 
     if (phead == NULL)
     {
