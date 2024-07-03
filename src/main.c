@@ -53,11 +53,14 @@ int main(int argc, char *argv[])
         pointer = pointer->next;
     }
 
+    printf("%s|%s|%d\n", __FILE__, __func__, __LINE__);
     for (i = 0; i < node_num; i++)
     {
         pthread_join(tid[i], NULL);
+        
     }
-    //pointer = ctrl_info->ctrl_phead;
+    
+    printf("%s|%s|%d\n", __FILE__, __func__, __LINE__);
     for (i = 0; i < node_num; i++)
     {
         if (pointer->final != NULL)

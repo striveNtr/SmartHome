@@ -17,5 +17,4 @@
 
 int socket_init(const char *ipaddr,const char *port);
 
-
 #endif

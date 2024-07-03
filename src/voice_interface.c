@@ -51,7 +51,7 @@ static void *voice_get(void *arg)
     {
         pthread_exit(0);
     }
-    pthread_detach(pthread_self());
+    // pthread_detach(pthread_self());
     printf("%s thread start\n",__func__);
     while (1)
     {
@@ -72,6 +72,7 @@ static void *voice_get(void *arg)
 // 语言播报
 static void *voice_set(void *arg)
 {
+    
 }
 
 struct control voice_control = {

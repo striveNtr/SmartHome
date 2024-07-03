@@ -27,15 +27,17 @@ static void *tcpsocket_get(void *arg)
 	int keepinterval = 5; // 设置探测包发送间隔为5秒
 	int keepcount = 3;	  // 设置探测包发送次数为3次
 
-	pthread_detach(pthread_self());
+	// pthread_detach(pthread_self());
 	
 	printf("%s|%s|%d: s_fd = %d\n", __FILE__, __func__, __LINE__, s_fd);
 	
 	if (-1 == s_fd)
 	{
+		printf("%s|%s|%d: s_fd = %d\n", __FILE__, __func__, __LINE__, s_fd);
 		s_fd = tcpsocket_init();
 		if (-1 == s_fd)
 		{
+			printf("%s|%s|%d: s_fd = %d\n", __FILE__, __func__, __LINE__, s_fd);
 			printf("tcpsocket_init failed\n");
 			pthread_exit(0);
 		} 
@@ -43,16 +45,19 @@ static void *tcpsocket_get(void *arg)
 	
 	if (NULL != arg)
 	{
+		printf("%s|%s|%d:arg =%p \n", __FILE__, __func__, __LINE__,arg);
 		ctrl_info = (ctrl_info_t *)arg;
 	}
 
 	if (NULL != ctrl_info)
 	{
+		printf("%s|%s|%d:ctrl_info =%p \n", __FILE__, __func__, __LINE__,ctrl_info);
 		mqd = ctrl_info->mqd;
 	}
-	
+
 	if ((mqd_t)-1 == mqd)
 	{
+		printf("%s|%s|%d:mqd =%d \n", __FILE__, __func__, __LINE__,mqd);
 		pthread_exit(0);
 	}
 	memset(&c_addr, 0, sizeof(struct sockaddr_in));
@@ -127,8 +132,6 @@ struct control tcpsocket_control = {
 
 struct control *add_tcpsocket_to_ctrl_list(struct control *phead)
 {
-	//struct control *pcontrol = NULL;
-
 	if (phead == NULL)
 	{
 		phead = &tcpsocket_control;

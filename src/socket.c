@@ -18,6 +18,7 @@ int socket_init(const char *ipaddr, const char *port)
     inet_aton(ipaddr,&s_addr.sin_addr);
     //2.bind
     ret = bind(s_fd,(struct sockaddr *)&s_addr,sizeof(struct sockaddr_in));
+    printf("%s | %s | %d:ret = %d\n",__FILE__, __func__, __LINE__,ret);
     if(ret == -1)
     {
         perror("bind");
