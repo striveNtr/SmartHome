@@ -5,6 +5,7 @@
 #include "control.h"
 #include <pthread.h>
 #include "global.h"
+#include "smoke_interface.h"
 
 int main(int argc, char *argv[])
 {
@@ -17,6 +18,10 @@ int main(int argc, char *argv[])
     ctrl_info->ctrl_phead = NULL;
     ctrl_info->mqd = -1;
     int node_num = 0;
+    if (wiringPiSetup() == -1)
+    {
+        return -1;
+    }
     ctrl_info->mqd = create_mqd();
 
     if (ctrl_info->mqd == -1)
@@ -27,6 +32,7 @@ int main(int argc, char *argv[])
 
     ctrl_info->ctrl_phead = add_voice_to_ctrl_list(ctrl_info->ctrl_phead);
     ctrl_info->ctrl_phead = add_tcpsocket_to_ctrl_list(ctrl_info->ctrl_phead);
+    ctrl_info->ctrl_phead = add_smoke_to_ctrl_list(ctrl_info->ctrl_phead);
 
     pointer = ctrl_info->ctrl_phead;
     while (pointer != NULL)
@@ -57,9 +63,8 @@ int main(int argc, char *argv[])
     for (i = 0; i < node_num; i++)
     {
         pthread_join(tid[i], NULL);
-        
     }
-    
+
     printf("%s|%s|%d\n", __FILE__, __func__, __LINE__);
     for (i = 0; i < node_num; i++)
     {
@@ -67,6 +72,16 @@ int main(int argc, char *argv[])
             pointer->final();
         pointer = pointer->next;
     }
+    
     msg_queue_final(ctrl_info->mqd);
+    if (ctrl_info != NULL)
+    {
+        free(ctrl_info);
+    }
+    if(tid != NULL)
+    {
+        free(tid);
+    }
+
     return 0;
 }

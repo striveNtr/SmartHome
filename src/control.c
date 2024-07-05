@@ -1,17 +1,17 @@
 #include "control.h"
 
-struct control *add_device_to_ctrl_list(struct control *phead, struct control *device)
+struct control *add_interface_to_ctrl_list(struct control *phead, struct control *control_interface)
 {
     struct control *pcontrol;
     if(phead == NULL)
     {
-        pcontrol = device;
+        pcontrol =  control_interface;
         return pcontrol;
     }
     else
     {
-        device->next = phead;
-        phead = device;
+        control_interface->next = phead;
+        phead = control_interface;
         return phead;
     }
 }

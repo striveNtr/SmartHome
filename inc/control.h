@@ -17,6 +17,6 @@ struct control
 };
 
 //头插法：用于control类链表的创建
-struct control *add_device_to_ctrl_list(struct control *phead, struct control *device);
+struct control *add_interface_to_ctrl_list(struct control *phead, struct control *control_interface);
 
 #endif

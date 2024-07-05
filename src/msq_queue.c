@@ -8,7 +8,7 @@ mqd_t create_mqd()
     // 定义一个mq_attr类型的变量attr，并初始化
     struct mq_attr attr;
     attr.mq_flags = 0;
-    attr.mq_maxmsg = 10;
+    attr.mq_maxmsg = 50;
     attr.mq_msgsize = 256;
     attr.mq_curmsgs = 0;
     // 以O_CREAT | O_RDWR模式创建一个消息队列，并返回mqd

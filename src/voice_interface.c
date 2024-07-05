@@ -51,7 +51,7 @@ static void *voice_get(void *arg)
     {
         pthread_exit(0);
     }
-    // pthread_detach(pthread_self());
+    //pthread_detach(pthread_self());
     printf("%s thread start\n",__func__);
     while (1)
     {
@@ -85,15 +85,5 @@ struct control voice_control = {
 
 struct control *add_voice_to_ctrl_list(struct control *phead)
 {
-
-    if (phead == NULL)
-    {
-        phead = &voice_control;
-    }
-    else
-    {
-        voice_control.next = phead;
-        phead = &voice_control;
-    }
-    return phead;
+    return add_interface_to_ctrl_list(phead,&voice_control);
 }

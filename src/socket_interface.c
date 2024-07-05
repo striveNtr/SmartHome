@@ -27,7 +27,7 @@ static void *tcpsocket_get(void *arg)
 	int keepinterval = 5; // 设置探测包发送间隔为5秒
 	int keepcount = 3;	  // 设置探测包发送次数为3次
 
-	// pthread_detach(pthread_self());
+	//pthread_detach(pthread_self());
 	
 	printf("%s|%s|%d: s_fd = %d\n", __FILE__, __func__, __LINE__, s_fd);
 	
@@ -132,14 +132,5 @@ struct control tcpsocket_control = {
 
 struct control *add_tcpsocket_to_ctrl_list(struct control *phead)
 {
-	if (phead == NULL)
-	{
-		phead = &tcpsocket_control;
-	}
-	else
-	{
-		tcpsocket_control.next = phead;
-		phead = &tcpsocket_control;
-	}
-	return phead;
+	return add_interface_to_ctrl_list(phead,&tcpsocket_control);
 }
