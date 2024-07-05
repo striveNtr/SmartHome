@@ -7,6 +7,11 @@
 #include "global.h"
 #include "smoke_interface.h"
 
+void signal_handler(int sig)
+{
+    printf("signal_handler\n");
+}
+
 int main(int argc, char *argv[])
 {
     pthread_t thread_id;
@@ -72,7 +77,7 @@ int main(int argc, char *argv[])
             pointer->final();
         pointer = pointer->next;
     }
-    
+
     msg_queue_final(ctrl_info->mqd);
     if (ctrl_info != NULL)
     {
