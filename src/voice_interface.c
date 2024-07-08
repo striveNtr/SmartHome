@@ -4,10 +4,9 @@
 #include <pthread.h>
 #include "global.h"
 
-
 static int serial_fd = -1;
 
-static int voice_init(void) 
+static int voice_init(void)
 {
     serial_fd = myserialOpen(SERIAL_DEV, BAUD);
     printf("%s | %s | %d |serial_fd:%d\n", __FILE__, __func__, __LINE__, serial_fd);
@@ -42,27 +41,27 @@ static void *voice_get(void *arg)
             pthread_exit(0);
         }
     }
-    if(ctrl_info == NULL)
+    if (ctrl_info != NULL)
     {
         mqd = ctrl_info->mqd;
     }
-    
+
     if ((mqd_t)-1 == mqd)
     {
         pthread_exit(0);
     }
-    //pthread_detach(pthread_self());
-    printf("%s thread start\n",__func__);
+    pthread_detach(pthread_self());
+    printf("%s thread start\n", __func__);
     while (1)
     {
         len = serialGetstring(serial_fd, buffer);
-        printf("%s | %s | %d |0x%x,0x%x,0x%x,0x%x,0x%x,0x%x\n", __FILE__, __func__, __LINE__, buffer[0],buffer[1],buffer[2],buffer[3],buffer[4],buffer[5]);
+        printf("%s | %s | %d |0x%x,0x%x,0x%x,0x%x,0x%x,0x%x\n", __FILE__, __func__, __LINE__, buffer[0], buffer[1], buffer[2], buffer[3], buffer[4], buffer[5]);
         printf("%s | %s | %d | len:%d\n", __FILE__, __func__, __LINE__, len);
         if (len > 0)
         {
             if (buffer[0] == 0xAA && buffer[1] == 0x55 & buffer[4] == 0x55 && buffer[5] == 0xAA)
             {
-                printf("%s | %s | %d |send:0x%x,0x%x,0x%x,0x%x,0x%x,0x%x\n", __FILE__, __func__, __LINE__, buffer[0],buffer[1],buffer[2],buffer[3],buffer[4],buffer[5]);
+                printf("%s | %s | %d |send:0x%x,0x%x,0x%x,0x%x,0x%x,0x%x\n", __FILE__, __func__, __LINE__, buffer[0], buffer[1], buffer[2], buffer[3], buffer[4], buffer[5]);
                 send_message(mqd, buffer, len);
             }
         }
@@ -72,7 +71,21 @@ static void *voice_get(void *arg)
 // 语言播报
 static void *voice_set(void *arg)
 {
-    
+    pthread_detach(pthread_self());
+    unsigned char *buffer = (unsigned char *)arg;
+    if (serial_fd == -1)
+    {
+        serial_fd = voice_init();
+        if (serial_fd == -1)
+        {
+            pthread_exit(0);
+        }
+    }
+    if (buffer != NULL)
+    {
+        serialSendstring(serial_fd, buffer, 6);
+    }
+    pthread_exit(0);
 }
 
 struct control voice_control = {
@@ -85,5 +98,5 @@ struct control voice_control = {
 
 struct control *add_voice_to_ctrl_list(struct control *phead)
 {
-    return add_interface_to_ctrl_list(phead,&voice_control);
+    return add_interface_to_ctrl_list(phead, &voice_control);
 }

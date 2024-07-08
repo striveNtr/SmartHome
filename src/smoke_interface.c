@@ -41,8 +41,7 @@ static void *smoke_get(void *arg)
     {
         pthread_exit(0);
     }
-    //pthread_detach(pthread_self());
-    //printf("%s|%s|%d smoke_start\n", __FILE__, __func__, __LINE__);
+    pthread_detach(pthread_self());
     while (1)
     {
         status = digitalRead(SMOKE_PIN);
@@ -60,7 +59,7 @@ static void *smoke_get(void *arg)
                 continue;
             }
         }
-        else //if(status == HIGH && switch_status == 1)
+        else if(status == HIGH && switch_status == 1)
         {
             buffer[2] = 0x45;
             buffer[3] = 0x00;
@@ -74,10 +73,10 @@ static void *smoke_get(void *arg)
                 continue;
             }
         }
-        sleep(1);
+        sleep(5);
     }
     // 退出线程
-    //pthread_exit(0);
+    pthread_exit(0);
 }
 
 // 声明 smoke_control 结构体

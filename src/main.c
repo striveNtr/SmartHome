@@ -6,11 +6,7 @@
 #include <pthread.h>
 #include "global.h"
 #include "smoke_interface.h"
-
-void signal_handler(int sig)
-{
-    printf("signal_handler\n");
-}
+#include "receive_interface.h"
 
 int main(int argc, char *argv[])
 {
@@ -22,7 +18,7 @@ int main(int argc, char *argv[])
     ctrl_info = (ctrl_info_t *)malloc(sizeof(ctrl_info_t));
     ctrl_info->ctrl_phead = NULL;
     ctrl_info->mqd = -1;
-    int node_num = 0;
+    int node_num = 0;  
     if (wiringPiSetup() == -1)
     {
         return -1;
@@ -38,8 +34,10 @@ int main(int argc, char *argv[])
     ctrl_info->ctrl_phead = add_voice_to_ctrl_list(ctrl_info->ctrl_phead);
     ctrl_info->ctrl_phead = add_tcpsocket_to_ctrl_list(ctrl_info->ctrl_phead);
     ctrl_info->ctrl_phead = add_smoke_to_ctrl_list(ctrl_info->ctrl_phead);
+    ctrl_info->ctrl_phead = add_receive_to_ctrl_list(ctrl_info->ctrl_phead);
 
     pointer = ctrl_info->ctrl_phead;
+    
     while (pointer != NULL)
     {
         if (pointer->init != NULL)
@@ -79,11 +77,12 @@ int main(int argc, char *argv[])
     }
 
     msg_queue_final(ctrl_info->mqd);
+
     if (ctrl_info != NULL)
     {
         free(ctrl_info);
     }
-    if(tid != NULL)
+    if (tid != NULL)
     {
         free(tid);
     }
