@@ -1,6 +1,7 @@
 #include "receive_interface.h"
 
 static int oled_fd = -1;
+static struct gdevice *pdevhead = NULL;
 
 // 定义一个结构体，用于存储消息长度、缓冲区和控制信息
 typedef struct
@@ -16,6 +17,10 @@ typedef struct
 static int receive_init(void)
 {
 	//设备类链表添加
+	pdevhead = add_lrled_to_gdevice_list(pdevhead);//客厅灯
+	pdevhead = add_bled_to_gdevice_list(pdevhead);//卧室灯
+	pdevhead = add_fan_to_gdevice_list(pdevhead);//风扇
+	pdevhead = add_beep_to_gdevice_list(pdevhead);//蜂鸣器
 	oled_fd = myoled_init();
 	face_init();
 	return 0;
@@ -34,6 +39,7 @@ static void receive_final(void)
 static void *handle_device(void *arg)
 {
     recv_msg_t *recv_msg = NULL;
+	struct gdevice * cur_gdev = NULL;
 	pthread_detach(pthread_self());
 	if(arg != NULL)
 	{
@@ -42,6 +48,16 @@ static void *handle_device(void *arg)
 		printf("%s | %s | %d 0x%x 0x%x 0x%x 0x%x 0x%x 0x%x\n", __FILE__, __func__, __LINE__, 
 		recv_msg->buffer[0], recv_msg->buffer[1], recv_msg->buffer[2], recv_msg->buffer[3], 
 		recv_msg->buffer[4], recv_msg->buffer[5]);
+	}
+	
+	if(recv_msg != NULL && recv_msg->buffer != NULL)
+	{
+		cur_gdev = find_gdevice_by_key(pdevhead, recv_msg->buffer[2]);	
+	}
+	if(cur_gdev != NULL)
+	{
+		cur_gdev->gpio_status = recv_msg->buffer[3] == 0 ? LOW : HIGH;
+		set_gpio_gdevice_status(cur_gdev);
 	}
 	pthread_exit(0);
 }

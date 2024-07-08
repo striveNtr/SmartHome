@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include <wiringPi.h>
 struct gdevice
 {
     char dev_name[128];    // 设备名称
@@ -15,4 +16,8 @@ struct gdevice
     int voice_set_status;  // 是否语音语音播报
     struct gdevice *next;
 };
+
+struct gdevice *add_device_to_gdevice_list(struct gdevice *phead, struct gdevice *device);
+struct gdevice *find_gdevice_by_key(struct gdevice *pdev, int key);
+int set_gpio_gdevice_status(struct gdevice *pdev);
 #endif

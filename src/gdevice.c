@@ -1,7 +1,6 @@
-#include <wiringPi.h>
 #include "gdevice.h"
 // 根据key值(buffer[2])查找设备节点
-struct gdevice *find_gdevice_by_key(struct gdevice *pdev, unsigned char key)
+struct gdevice *find_gdevice_by_key(struct gdevice *pdev, int key)
 {
     struct gdevice *p = NULL;
     if (NULL == pdev)

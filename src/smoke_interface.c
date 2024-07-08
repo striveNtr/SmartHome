@@ -48,7 +48,7 @@ static void *smoke_get(void *arg)
         if (status == LOW)
         {
             buffer[2] = 0x45;
-            buffer[3] = 0x01;
+            buffer[3] = 0x00;
             switch_status = 1;
             printf("%s|%s|%d: 0x%x, 0x%x,0x%x, 0x%x, 0x%x,0x%x\n", __FILE__,
                    __func__, __LINE__, buffer[0], buffer[1], buffer[2], buffer[3],
@@ -62,7 +62,7 @@ static void *smoke_get(void *arg)
         else if(status == HIGH && switch_status == 1)
         {
             buffer[2] = 0x45;
-            buffer[3] = 0x00;
+            buffer[3] = 0x01;
             switch_status = 0;
             printf("%s|%s|%d: 0x%x, 0x%x,0x%x, 0x%x, 0x%x,0x%x\n", __FILE__,
                    __func__, __LINE__, buffer[0], buffer[1], buffer[2], buffer[3],

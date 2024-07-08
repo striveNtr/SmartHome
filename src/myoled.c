@@ -36,5 +36,6 @@ int myoled_init(void)
     
     e = oled_open(&disp,FILENAME);
     e = oled_init(&disp);
+    oled_clear(&disp);
     return e;
 }
