@@ -9,7 +9,7 @@ struct gdevice beep_gdev =
      .gpio_mode = OUTPUT,
      .gpio_status = HIGH,
      .check_face_status = 0,
-     .voice_set_status = 0,
+     .voice_set_status = 1,
 };
 
 struct gdevice *add_beep_to_gdevice_list(struct gdevice *phead)

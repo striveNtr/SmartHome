@@ -10,6 +10,7 @@
 #include "bled_gdevice.h"
 #include "fan_gdevice.h"
 #include "beep_gdevice.h"
+#include "lock_gdevice.h"
 struct control *add_receive_to_ctrl_list(struct control *phead);
 
 #endif

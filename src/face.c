@@ -35,7 +35,7 @@ double face_category(void)
 {
     double result = 0.0;
     system(WGET_CMD);
-    if (access(FACE_FILE, F_OK) == 0)
+    if (access(FACE_FILE, F_OK) != 0)
     {
         return result;
     }

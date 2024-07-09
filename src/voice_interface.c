@@ -71,7 +71,7 @@ static void *voice_get(void *arg)
 // 语言播报
 static void *voice_set(void *arg)
 {
-    pthread_detach(pthread_self());
+   pthread_detach(pthread_self());
     unsigned char *buffer = (unsigned char *)arg;
     if (serial_fd == -1)
     {
